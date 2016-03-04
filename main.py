@@ -125,31 +125,9 @@ print(str(timeit.default_timer()-begin)+ " seconds")
 ############################### PCA #######################################################
 
 
-###### SVD function method ###### THIS MIGHT TAKE TOO LONG TO RUN!!
-
-X_tilde=trainimages-np.mean(trainimages,axis=0)
-
-U,S,V=np.linalg.svd(X_tilde)
-U=np.load("U.npy")
-S=np.load("S.npy")
-V=np.load("V.npy")
-
-S=np.diag(S)
-
-## how many dimensions do I need to keep to contain 95% of the variance?
-cum_s = np.cumsum(S*S)
-cum_s = cum_s/cum_s[-1]
-s = np.argmax(cum_s>0.95)
-
-Y = np.dot(X_tilde,V[:,:s]) ## reduced dimension matrix
-Xtest_tilde=testimages-np.mean(trainimages,axis=0)
-Ytest = np.dot(Xtest_tilde,V[:,s])
 
 
-
-
-##### PCA function method ##### USE THIS INSTEAD OF SVD
-begin=timeit.default_timer()
+##### PCA function method #####
 pca = PCA()
 pca.fit(trainimages)
 S=pca.explained_variance_ratio_
@@ -158,7 +136,6 @@ cum_s = cum_s/cum_s[-1]
 s = np.argmax(cum_s>0.95)
 Y=pca.transform(trainimages)[:,:s]
 Ytest=pca.transform(testimages)[:,:s]
-print(str(timeit.default_timer()-begin)+ " seconds")
 
 
 ##Run KNN once with k=3 on reduced dataset
@@ -247,9 +224,9 @@ for k in range(1,k+1):
     print("k="+str(k) + " Accuracy score:" +str(score))
     error[k-1]=score
     score=0
-print error
+print(error)
 stop = timeit.default_timer()
-print str(stop-start) +" seconds"
+print(str(stop-start) +" seconds")
 
 plt.plot(range(1,k+1), error)
 plt.title("Classification Rate")
@@ -282,10 +259,10 @@ for k in range(1,k+1):
     print("k="+str(k) + " Accuracy score:" +str(score))
     error[k-1]=score
     score=0
-print error
+print(error)
 
 stop = timeit.default_timer()
-print str(stop-start) +" seconds"
+print(str(stop-start) +" seconds")
 
 plt.plot(range(1,k+1), error)
 plt.title("Classification Rate")
